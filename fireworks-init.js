@@ -1,36 +1,34 @@
-// fireworks-init.js — start fireworks together with the envelope (after morph)
+// fireworks-init.js — robust start/stop (no surprise 10s stop)
 (function () {
   function getCtor() {
     const g = window;
-    return (
-      g.Fireworks?.Fireworks ||
-      g.fireworks?.Fireworks ||
-      g.Fireworks ||
-      g.fireworks
-    );
+    return g.Fireworks?.Fireworks || g.fireworks?.Fireworks || g.Fireworks || g.fireworks;
   }
 
   let fw = null;
   let ready = false;
-  const queued = []; // calls to startFireworks made before ready
+  let queued = [];
+  let stopTimer = null;  // <— track any previous auto-stop
 
-  // Public API (works even before init)
-  window.startFireworks = function (ms = 10000) {
+  // Start: ms=0 => run forever. Clears any previous stop timer.
+  window.startFireworks = function (ms = 0) {
     if (!ready) { queued.push(ms); return; }
+    if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; } // <—
     fw.start();
-    if (ms > 0) setTimeout(() => fw.stop(), ms);
+    if (ms > 0) {
+      stopTimer = setTimeout(() => { fw.stop(); stopTimer = null; }, ms);
+    }
   };
+
   window.stopFireworks = function () {
+    if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
     if (ready) fw.stop();
   };
 
   function setup() {
     const layer = document.getElementById('fireworks-layer');
-    const Ctor  = getCtor();
-    if (!layer || !Ctor) {
-      console.error('[fireworks] Missing #fireworks-layer or CDN not loaded.');
-      return;
-    }
+    const Ctor = getCtor();
+    if (!layer || !Ctor) { console.error('[fireworks] layer/CDN missing'); return; }
 
     fw = new Ctor(layer, {
       autoresize: true,
@@ -49,24 +47,16 @@
       particles: 60,
       traceLength: 3,
       traceSpeed: 17,
-      lineWidth: {
-        explosion: { min: 1.0, max: 4.0 },
-        trace: { min: 0.10, max: 1.77 }
-      },
+      lineWidth: { explosion: { min: 1.0, max: 4.0 }, trace: { min: 0.10, max: 1.77 } },
       lineStyle: 'round',
       mouse: { click: false, move: false, max: 4 },
       sound: { enabled: false }
     });
 
     ready = true;
-    // flush any early calls
-    while (queued.length) {
-      const ms = queued.shift();
-      window.startFireworks(ms);
-    }
+    while (queued.length) window.startFireworks(queued.shift());
   }
 
-  // init after DOM is ready (CDN is already before this file in HTML)
   if (document.readyState === 'loading') {
     window.addEventListener('DOMContentLoaded', setup);
   } else {

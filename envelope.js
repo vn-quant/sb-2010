@@ -73,7 +73,7 @@
   100%{ transform:translateY(-10px) scale(1); opacity:1; }
 }
 .letter-page{
-  background:rgba(255, 255, 255, 0.69); /* transparent 20% */
+  background:rgba(255, 255, 255, 0.80); /* transparent 20% */
   color:#000;                      /* black text */
   width:min(80vw,680px);
   padding:44px 54px;

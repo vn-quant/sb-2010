@@ -1,9 +1,10 @@
-// rotate-fit.js — rotate/scale the whole page when in portrait
+// rotate-fit.js — rotates the whole stage in portrait and scales to fit
 (function () {
-  const root = document.body;         // rotate the body, not #stage
+  const stage = document.getElementById('stage');
   const hint = document.getElementById('orient-hint');
 
   function isPortrait() {
+    // Fallback-safe check
     return window.matchMedia('(orientation: portrait)').matches ||
            window.innerHeight >= window.innerWidth;
   }
@@ -12,50 +13,51 @@
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // Ensure the body acts like a transform container
-    root.style.position = 'fixed';
-    root.style.inset = '0';
-    root.style.transformOrigin = '50% 50%';
-
+    // We want a "landscape canvas" feel everywhere.
+    // In portrait: rotate 90deg and scale to fit within the portrait bounds.
     if (isPortrait()) {
-      // After 90° rotation, logical width/height swap
-      const targetW = vh;
+      // After rotation, stage width/height swap.
+      // We need a scale so that landscape (width=vh, height=vw) fits inside (vw x vh)
+      const targetW = vh; // because rotated 90deg
       const targetH = vw;
       const scale = Math.min(vw / targetW, vh / targetH);
 
-      root.style.transform = `rotate(90deg) scale(${scale})`;
-
-      // Center it
+      stage.style.transform = `rotate(90deg) scale(${scale})`;
+      // center after transform
       const tx = (vw - targetW * scale) / 2;
       const ty = (vh - targetH * scale) / 2;
-      root.style.left = `${tx}px`;
-      root.style.top  = `${ty}px`;
-      root.style.width  = `${targetW}px`;
-      root.style.height = `${targetH}px`;
+      stage.style.left = `${tx}px`;
+      stage.style.top  = `${ty}px`;
+      stage.style.width  = `${targetW}px`;
+      stage.style.height = `${targetH}px`;
 
+      // brief hint on first rotate
       if (hint) hint.style.display = 'flex';
       clearTimeout(fit._hide);
       fit._hide = setTimeout(() => { if (hint) hint.style.display = 'none'; }, 700);
     } else {
-      root.style.transform = 'none';
-      root.style.left = '0px';
-      root.style.top  = '0px';
-      root.style.width  = '100vw';
-      root.style.height = '100vh';
+      // In landscape: no rotation, stage fills viewport.
+      stage.style.transform = 'none';
+      stage.style.left = '0px';
+      stage.style.top  = '0px';
+      stage.style.width  = '100vw';
+      stage.style.height = '100vh';
       if (hint) hint.style.display = 'none';
     }
 
-    // Let canvases recompute sizes
+    // Notify any canvas resizers (your scripts already listen to resize).
     window.dispatchEvent(new Event('resize'));
   }
 
+  // iOS sometimes delays orientation; use a small debounce
   let t;
-  function onChange(){ clearTimeout(t); t = setTimeout(fit, 80); }
+  function onChange() { clearTimeout(t); t = setTimeout(fit, 80); }
 
   window.addEventListener('resize', onChange);
   window.addEventListener('orientationchange', onChange);
   document.addEventListener('visibilitychange', onChange);
 
+  // Kick once DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', fit);
   } else {
