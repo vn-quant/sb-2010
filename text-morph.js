@@ -123,7 +123,7 @@ const MORPH_SETTINGS = {
             }
             if (window.showEnvelope3D) {
               window.showEnvelope3D();
-              window.startFireworks?.(10000); 
+              window.startFireworks?.(1000000); 
             }
           })();
         }
@@ -149,3 +149,4 @@ const MORPH_SETTINGS = {
 
   requestAnimationFrame(step);
 })();
+
