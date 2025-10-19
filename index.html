@@ -7,88 +7,42 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
   <title>20/10 — Countdown & Envelope</title>
-  <style>
-    :root {
-      --z-morph: 5;
-      --z-blackout: 10040;
-      --z-fireworks: 10045; /* behind envelope */
-    }
-    html, body {
-      margin: 0; padding: 0; height: 100%;
-      background: #000; overflow: hidden;
-      -webkit-text-size-adjust: none;
-      touch-action: none;
-    }
-    canvas {
-      position: fixed; inset: 0;
-      width: 100vw; height: 100vh;
-      display: block;
-    }
-
-    /* Morph dots above matrix */
-    #morph {
-      z-index: var(--z-morph);
-      pointer-events: none;
-    }
-
-    /* Fade-to-black between phases */
-    #blackout {
-      position: fixed; inset: 0; background: #000;
-      opacity: 0; transition: opacity .7s ease;
-      z-index: var(--z-blackout); pointer-events: none;
-    }
-    #blackout.is-visible { opacity: 1; }
-
-    /* Fireworks behind envelope */
-    #fireworks-layer {
-      position: fixed; inset: 0;
-      width: 100vw; height: 100vh;
-      z-index: var(--z-fireworks); pointer-events: none;
-    }
-
-    /* Suggest landscape for best view */
-    @media (orientation: portrait) {
-      body::before {
-        content: "Rotate your phone for the best view 🌸";
-        position: fixed; inset: 0;
-        display: flex; align-items: center; justify-content: center;
-        background: #000; color: #fff; text-align: center;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        font-size: clamp(16px, 3.4vw, 20px);
-        z-index: 20000;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <!-- Background canvases -->
-  <canvas id="matrix"></canvas>
-  <canvas id="morph"></canvas>
+  <!-- The whole experience lives inside #stage so we can rotate/scale it -->
+  <div id="stage">
+    <canvas id="matrix"></canvas>
+    <canvas id="morph"></canvas>
+    <div id="blackout"></div>
+    <div id="fireworks-layer"></div>
+  </div>
 
-  <!-- Transition & fireworks layers -->
-  <div id="blackout"></div>
-  <div id="fireworks-layer"></div>
+  <!-- Optional hint overlay while we rotate/fit -->
+  <div id="orient-hint">Rotating for best view…</div>
 
-  <!-- Phase 1 scripts -->
+  <!-- Phase 1 -->
   <script src="./matrix.js"></script>
   <script src="./text-morph.js"></script>
   <script src="./blackout.js"></script>
 
-  <!-- Fireworks library + your existing init -->
+  <!-- Fireworks -->
   <script src="https://unpkg.com/fireworks-js@2.10.6/dist/index.umd.js"></script>
   <script src="./fireworks-init.js"></script>
 
-  <!-- Envelope (injects its own mount; make sure its background is transparent) -->
+  <!-- Envelope (make sure its mount background is transparent in envelope.js) -->
   <script src="./envelope.js"></script>
 
-  <!-- Hook fireworks to envelope reveal -->
+  <!-- Auto-rotate & scale to fit phones -->
+  <script src="./rotate-fit.js"></script>
+
+  <!-- Start fireworks when envelope shows (forever) -->
   <script>
     (function () {
       const prev = window.showEnvelope3D;
       window.showEnvelope3D = function () {
         prev && prev();
-        // Start fireworks forever (0 = infinite)
-        window.startFireworks && window.startFireworks(0);
+        window.startFireworks && window.startFireworks(0); // 0 = infinite
       };
     })();
   </script>
