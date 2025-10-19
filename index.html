@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport"
+      content="width=device-width, height=device-height,
+               initial-scale=1.0, maximum-scale=1.0,
+               user-scalable=no, viewport-fit=cover">
   <title>20/10 — Countdown & Envelope</title>
   <style>
     html,body{margin:0;height:100%;background:#000;overflow:hidden}
@@ -23,10 +27,13 @@
   </style>
 </head>
 <body>
+<div id="stage">
   <canvas id="matrix"></canvas>
   <canvas id="morph"></canvas>
   <div id="blackout"></div>
   <div id="fireworks-layer"></div>
+</div>
+<div id="orient-hint">Rotating for best view…</div>
 
   <!-- Phase 1: rain + morph -->
   <script src="./matrix.js"></script>
