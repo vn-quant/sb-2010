@@ -2,47 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>20/10 — Countdown & Envelope</title>
-  <link rel="stylesheet" href="./style.css" />
+  <style>
+    html,body{margin:0;height:100%;background:#000;overflow:hidden}
+    canvas{position:fixed;inset:0;display:block}
+
+    /* Morph dots above matrix */
+    #morph{position:fixed;inset:0;z-index:5;pointer-events:none}
+
+    /* Fade-to-black between phases */
+    #blackout{
+      position:fixed;inset:0;background:#000;opacity:0;
+      transition:opacity .7s ease;z-index:10040;pointer-events:none
+    }
+    #blackout.is-visible{opacity:1}
+
+    /* Fireworks behind envelope */
+    #fireworks-layer{position:fixed;inset:0;z-index:10045;pointer-events:none}
+  </style>
 </head>
 <body>
-  <!-- The whole experience lives inside #stage so we can rotate/scale it -->
-  <div id="stage">
-    <canvas id="matrix"></canvas>
-    <canvas id="morph"></canvas>
-    <div id="blackout"></div>
-    <div id="fireworks-layer"></div>
-  </div>
+  <canvas id="matrix"></canvas>
+  <canvas id="morph"></canvas>
+  <div id="blackout"></div>
+  <div id="fireworks-layer"></div>
 
-  <!-- Optional hint overlay while we rotate/fit -->
-  <div id="orient-hint">Rotating for best view…</div>
-
-  <!-- Phase 1 -->
+  <!-- Phase 1: rain + morph -->
   <script src="./matrix.js"></script>
   <script src="./text-morph.js"></script>
   <script src="./blackout.js"></script>
 
-  <!-- Fireworks -->
+  <!-- Fireworks library + init (exposes startFireworks) -->
   <script src="https://unpkg.com/fireworks-js@2.10.6/dist/index.umd.js"></script>
   <script src="./fireworks-init.js"></script>
 
-  <!-- Envelope (make sure its mount background is transparent in envelope.js) -->
+  <!-- Envelope (injects its own mount; ensure its mount background is transparent) -->
   <script src="./envelope.js"></script>
 
-  <!-- Auto-rotate & scale to fit phones -->
-  <script src="./rotate-fit.js"></script>
-
-  <!-- Start fireworks when envelope shows (forever) -->
+  <!-- Sync fireworks to envelope reveal -->
   <script>
     (function () {
       const prev = window.showEnvelope3D;
       window.showEnvelope3D = function () {
         prev && prev();
-        window.startFireworks && window.startFireworks(0); // 0 = infinite
+        window.startFireworks && window.startFireworks(10000);
       };
     })();
   </script>
