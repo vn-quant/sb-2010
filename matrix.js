@@ -4,8 +4,8 @@ function initMatrixRain(canvasId = "matrix") {
     fontSize: 34,
     changeIntervalMs: 200,
     mode: "message", // "random" | "message"
-    message: "HAPPY 20/10",
-    charset: "HAPPY 20/10",
+    message: "HAPPY BIRTHDAY",
+    charset: "HAPPY BIRTHDAY",
     speedJitter: 0.2
   };
 
