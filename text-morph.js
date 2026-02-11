@@ -1,6 +1,6 @@
 // ===== Settings (edit here) =====
 const MORPH_SETTINGS = {
-  sequence: ["3", "2", "1", "HAPPY", "VIETNAMESE\nWOMEN'S DAY", "20/10","FROM \nQUANG.VN3"],
+  sequence: ["3", "2", "1", "HAPPY", "BIRTHDAY", "10/02","FROM \nQUANG.VN3"],
   dwellMs: 900,
   morphMs: 1000,
   finalHoldMs: 4000,
@@ -149,3 +149,4 @@ const MORPH_SETTINGS = {
 
   requestAnimationFrame(step);
 })();
+
