@@ -125,9 +125,9 @@
 
     // ✨ your message (now spaced correctly)
     const message = `
-Dear các chị/các bạn/các em team mô hình rủi ro và chỉ số basel,
+Dear các Thùy Giang
 
-Vì bị chê chữ xấu nên em xin phép được code thay vì viết lời thiệp này. Không chỉ riêng ngày 20/10, mà mong rằng mọi ngày trong năm đều là ngày đặc biệt dành cho chị em. Xin gửi các chị em vài câu vè nhỏ, chúc mọi người lúc nào cũng rạng rỡ như hoa và hạnh phúc như ý. Chúc các chị em 
+Vì bị chê chữ xấu nên em xin phép được code thay vì viết lời thiệp này. Không chỉ riêng ngày sinh nhật, mà mong rằng mọi ngày trong năm đều là ngày đặc biệt dành cho em. Xin gửi Giang vài câu vè nhỏ, chúc mọi người lúc nào cũng rạng rỡ như hoa và hạnh phúc như ý. Chúc các chị em 
 
   Đầu không rụng tóc 
   Đêm không mất ngủ 
@@ -176,3 +176,4 @@ Vì bị chê chữ xấu nên em xin phép được code thay vì viết lời 
     document.getElementById(MOUNT_ID).classList.add("show");
   };
 })();
+
